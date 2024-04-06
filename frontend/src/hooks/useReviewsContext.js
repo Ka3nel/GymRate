@@ -1,7 +1,7 @@
-import { ReviewsContext } from '../context/ReviewContext'
+import { ReviewsContext } from '../context/ReviewsContext'
 import { useContext } from 'react'
 
-export const useReviewContext = () => {
+export const useReviewsContext = () => {
     const context = useContext(ReviewsContext)
 
     if(!context) {

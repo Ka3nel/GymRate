@@ -6,7 +6,7 @@ import ReviewDetails from '../components/ReviewDetails'
 import ReviewForm from '../components/ReviewForm'
 
 const Home = () => {
-    const {reviews, dispatch} = useReviewsContext()
+    const { reviews, dispatch } = useReviewsContext()
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -19,13 +19,13 @@ const Home = () => {
         }
 
         fetchReviews()
-    }, [])
+    }, [dispatch])
 
     return (
         <div className="home">
             <div className="reviews">
                 {reviews && reviews.map((review) => (
-                    <ReviewDetails key={review._id} review={review}/>
+                    <ReviewDetails review={review} key={review._id}/>
                 ))}
             </div>
             <ReviewForm />

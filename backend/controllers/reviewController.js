@@ -30,6 +30,21 @@ const getReview = async(req, res) => {
 const createReview = async(req, res) => {
     const {title, text, overallRating} = req.body
 
+    let emptyFields = []
+
+    if(!title) {
+        emptyFields.push('title')
+    }
+    if(!text) {
+        emptyFields.push('text')
+    }
+    if(!overallRating) {
+        emptyFields.push('overallRating')
+    }
+    if(emptyFields.length > 0) {
+        return res.status(400).json({error: 'Please fill in all the fields', emptyFields})
+    }
+
     //add doc to db
     try {
         const review = await Review.create({title, text, overallRating})
