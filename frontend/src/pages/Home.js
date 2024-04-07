@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { useReviewsContext } from '../hooks/useReviewsContext'
+import { useAuthContext } from '../hooks/useAuthContext'
 
 //components
 import ReviewDetails from '../components/ReviewDetails'
@@ -7,10 +8,15 @@ import ReviewForm from '../components/ReviewForm'
 
 const Home = () => {
     const { reviews, dispatch } = useReviewsContext()
+    const { user } = useAuthContext()
 
     useEffect(() => {
         const fetchReviews = async () => {
-            const response = await fetch('/api/reviews')
+            const response = await fetch('/api/reviews', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            })
             const json = await response.json()
 
             if(response.ok) {
@@ -18,8 +24,10 @@ const Home = () => {
             }
         }
 
-        fetchReviews()
-    }, [dispatch])
+        if (user) {
+            fetchReviews()
+        }
+    }, [dispatch, user])
 
     return (
         <div className="home">

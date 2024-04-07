@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { useReviewsContext } from '../hooks/useReviewsContext'
+import { useAuthContext } from "../hooks/useAuthContext"
 
 const ReviewForm = () => {
     const { dispatch } = useReviewsContext()
+    const { user } = useAuthContext()
 
     const [title, setTitle] = useState('')
     const [text, setText] = useState('')
@@ -13,13 +15,19 @@ const ReviewForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        if (!user) {
+            setError('You must be logged in')
+            return
+        }
+
         const review = {title, text, overallRating}
 
         const response = await fetch('/api/reviews', {
             method: 'POST',
             body: JSON.stringify(review),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}`
             }
         })
         const json = await response.json()

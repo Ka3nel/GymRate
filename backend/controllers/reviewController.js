@@ -3,7 +3,9 @@ const mongoose = require('mongoose')
 
 //get all reviews
 const getReviews = async(req, res) => {
-    const reviews = await Review.find({}).sort({createdAt: -1})
+    const user_id = req.user._id
+
+    const reviews = await Review.find({ user_id }).sort({createdAt: -1})
 
     res.status(200).json(reviews)
 }
@@ -47,7 +49,8 @@ const createReview = async(req, res) => {
 
     //add doc to db
     try {
-        const review = await Review.create({title, text, overallRating})
+        const user_id = req.user._id
+        const review = await Review.create({title, text, overallRating, user_id})
         res.status(200).json(review)
     }catch(error) {
         res.status(400).json({error: error.message})
