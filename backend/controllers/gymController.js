@@ -1,11 +1,12 @@
-const Review = require('../models/reviewModel')
+const Gym = require('../models/gymModel')
 const mongoose = require('mongoose')
 
-//get all reviews of a certain user
-const getReviews = async(req, res) => {
-    const user_id = req.user._id
+//get all gyms with a certain latitude and longitude
+const getGyms = async(req, res) => {
+    const latitude = req.latitude
+    const longitude = req.longitude
 
-    const reviews = await Review.find({ user_id }).sort({createdAt: -1})
+    const gmys = await Gym.find({ user_id }).sort({createdAt: -1})
 
     res.status(200).json(reviews)
 }

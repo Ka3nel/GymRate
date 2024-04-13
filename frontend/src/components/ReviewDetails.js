@@ -29,8 +29,8 @@ const ReviewDetails = ({ review }) => {
     return (
         <div className="review-details">
             <h4>{review.title}</h4>
-            <p><strong>Overall rating: </strong>{review.overallRating}</p>
-            <p><strong>Review: </strong>{review.text}</p>
+            <p><strong>Overall rating: </strong>{review.overall_rating}</p>
+            <p><strong>Review: </strong>{review.content}</p>
             <p>{formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}</p>
             <span className="material-symbols-outlined" onClick={handleClick}>delete</span>
         </div>
