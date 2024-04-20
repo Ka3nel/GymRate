@@ -1,128 +1,112 @@
-const Gym = require('../models/gymModel')
-const mongoose = require('mongoose')
+const Gym = require("../models/gymModel");
+const mongoose = require("mongoose");
 
 //get all gyms with a certain latitude and longitude
-const getGyms = async(req, res) => {
-    const latitude = req.latitude
-    const longitude = req.longitude
+const getGyms = async (req, res) => {
+  const latitude = req.latitude;
+  const longitude = req.longitude;
 
-    const gmys = await Gym.find({ user_id }).sort({createdAt: -1})
+  const gyms = await Gym.find().sort({ createdAt: -1 });
 
-    res.status(200).json(reviews)
-}
+  res.status(200).json(gyms);
+};
 
-//get a single review
-const getReview = async(req, res) => {
-    const { id } = req.params
+//get a single gym
+const getGym = async (req, res) => {
+  const { id } = req.params;
 
-    //not a valid object id (done to avoid a crash)
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  //not a valid object id (done to avoid a crash)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such gym" });
+  }
 
-    const review = await Review.findById(id)
+  const gym = await Gym.findById(id);
 
-    if(!review) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  if (!gym) {
+    return res.status(404).json({ error: "No such gym" });
+  }
 
-    res.status(200).json(review)
-}
+  res.status(200).json(gym);
+};
 
-//create new review
-const createReview = async(req, res) => {
-    const {title,
-        content,
-        size_rating,
-        crowdness_rating,
-        machine_modernity_rating,
-        machine_variety_rating,
-        cleanliness_rating,
-        vibe_rating,
-        overall_rating} = req.body
+//create new gym
+const createGym = async (req, res) => {
+  const { name, details, latitude, longitude, total_rating } = req.body;
 
-    let emptyFields = []
+  let emptyFields = [];
 
-    if(!title) {
-        emptyFields.push('title')
-    }
-    if(!size_rating) {
-        emptyFields.push('size rating')
-    }
-    if(!crowdness_rating) {
-        emptyFields.push('crowdness rating')
-    }
-    if(!machine_modernity_rating) {
-        emptyFields.push('machine modernity rating')
-    }
-    if(!machine_variety_rating) {
-        emptyFields.push('machine variety rating')
-    }
-    if(!cleanliness_rating) {
-        emptyFields.push('cleanliness rating')
-    }
-    if(!vibe_rating) {
-        emptyFields.push('vibe rating')
-    }
-    if(emptyFields.length > 0) {
-        return res.status(400).json({error: 'Please fill in all the fields', emptyFields})
-    }
+  if (!name) {
+    emptyFields.push("name");
+  }
+  if (!details) {
+    emptyFields.push("details");
+  }
+  if (!latitude) {
+    emptyFields.push("latitude");
+  }
+  if (!longitude) {
+    emptyFields.push("longitude");
+  }
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all the fields", emptyFields });
+  }
 
-    //add doc to db
-    try {
-        const user_id = req.user._id
-        const review = await Review.create({user_id, gym_id,
-            title, content, 
-            size_rating, crowdness_rating, 
-            machine_modernity_rating, machine_variety_rating,
-            cleanliness_rating, vibe_rating, 
-            overall_rating})
-        res.status(200).json(review)
-    }catch(error) {
-        res.status(400).json({error: error.message})
-    }
-}
+  //add doc to db
+  try {
+    const gym = await Gym.create({
+      name,
+      details,
+      latitude,
+      longitude,
+    });
+    res.status(200).json(gym);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
-//delete a review
-const deleteReview = async(req, res) => {
-    const { id } = req.params
+//delete a hym
+const deleteGym = async (req, res) => {
+  const { id } = req.params;
 
-    //not a valid object id (done to avoid a crash)
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  //not a valid object id (done to avoid a crash)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such gym" });
+  }
 
-    const review = await Review.findOneAndDelete({_id: id})
+  const gym = await Gym.findOneAndDelete({ _id: id });
 
-    if(!review) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  if (!gym) {
+    return res.status(404).json({ error: "No such gym" });
+  }
 
-    res.status(200).json(review)
-}
+  res.status(200).json(gym);
+};
 
-//update a review
-const updateReview = async(req, res) => {
-    const { id } = req.params
+//update a gym
+const updateGym = async (req, res) => {
+  const { id } = req.params;
 
-    //not a valid object id (done to avoid a crash)
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  //not a valid object id (done to avoid a crash)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such gym" });
+  }
 
-    const review = await Review.findOneAndUpdate({_id: id}, {...req.body})
+  const gym = await Gym.findOneAndUpdate({ _id: id }, { ...req.body });
 
-    if(!review) {
-        return res.status(400).json({error: 'No such review'})
-    }
+  if (!gym) {
+    return res.status(400).json({ error: "No such gym" });
+  }
 
-    res.status(200).json(review)
-}
+  res.status(200).json(gym);
+};
 
 module.exports = {
-    getReviews,
-    getReview,
-    createReview,
-    deleteReview,
-    updateReview
-}
+  getGyms,
+  getGym,
+  createGym,
+  deleteGym,
+  updateGym,
+};

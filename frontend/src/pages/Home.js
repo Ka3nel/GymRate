@@ -1,44 +1,23 @@
-import { useEffect } from "react"
-import { useReviewsContext } from '../hooks/useReviewsContext'
-import { useAuthContext } from '../hooks/useAuthContext'
-
-//components
-import ReviewDetails from '../components/ReviewDetails'
-import ReviewForm from '../components/ReviewForm'
+import * as React from "react";
+import Map from "react-map-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const Home = () => {
-    const { reviews, dispatch } = useReviewsContext()
-    const { user } = useAuthContext()
+  return (
+    <div className="home">
+      <Map
+        mapboxAccessToken={process.env.REACT_APP_MAPBOX}
+        initialViewState={{
+          longitude: -122.4,
+          latitude: 37.8,
+          zoom: 14,
+        }}
+        style={{ width: "100vw", height: "100vh" }}
+        mapStyle="mapbox://styles/mapbox/streets-v9"
+        attributionControl={false}
+      />
+    </div>
+  );
+};
 
-    useEffect(() => {
-        const fetchReviews = async () => {
-            const response = await fetch('/api/reviews', {
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            })
-            const json = await response.json()
-
-            if(response.ok) {
-                dispatch({type: 'SET_REVIEWS', payload: json})
-            }
-        }
-
-        if (user) {
-            fetchReviews()
-        }
-    }, [dispatch, user])
-
-    return (
-        <div className="home">
-            <div className="reviews">
-                {reviews && reviews.map((review) => (
-                    <ReviewDetails review={review} key={review._id}/>
-                ))}
-            </div>
-            <ReviewForm />
-        </div>
-    )
-}
-
-export default Home
+export default Home;

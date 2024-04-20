@@ -1,11 +1,12 @@
 /* google font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap");
 
 /* layout */
 :root {
-  --primary: #97BFB4;
-  --error: #DD4A48;
-  --background: #F5EEDC;
+  --primary: #97bfb4;
+  --error: #dd4a48;
+  --background: #f5eedc;
+  --navbar_background: #f5eedcbc;
 }
 body {
   background: #f1f1f1;
@@ -13,7 +14,10 @@ body {
   font-family: "Poppins";
 }
 header {
-  background: var(--background);
+  width: 100%;
+  background: var(--navbar_background);
+  position: absolute;
+  z-index: 1000;
 }
 header .container {
   max-width: 1400px;
@@ -27,14 +31,13 @@ header a {
   color: #333;
   text-decoration: none;
 }
-.pages{
-  max-width: 1400px;
-  padding: 20px;
-  margin: 0 auto;
+.pages {
 }
 
 /* homepage */
-.home {
+
+/* user reviews page */
+.userReviews {
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 100px;
@@ -45,7 +48,7 @@ header a {
   margin: 20px auto;
   padding: 20px;
   position: relative;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
 }
 .review-details h4 {
   margin: 0 0 10px 0;
@@ -69,7 +72,8 @@ header a {
 }
 
 /* new review form */
-label, input {
+label,
+input {
   display: block;
 }
 input {
@@ -123,7 +127,8 @@ nav button {
 }
 
 /* auth forms */
-form.signup, form.login {
+form.signup,
+form.login {
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;

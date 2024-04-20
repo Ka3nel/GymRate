@@ -46,7 +46,7 @@ const reviewSchema = new Schema(
     },
     overall_rating: {
       type: Number,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }

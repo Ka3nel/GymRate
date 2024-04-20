@@ -1,31 +1,31 @@
-const express = require('express')
+const express = require("express");
 const {
-    getReviews,
-    getReview,
-    createReview,
-    deleteReview,
-    updateReview
-} = require('../controllers/reviewController')
-const requireAuth = require('../middleware/requireAuth')
+  getReviews,
+  getReview,
+  createReview,
+  deleteReview,
+  updateReview,
+} = require("../controllers/reviewController");
+const requireAuth = require("../middleware/requireAuth");
 
-const router = express.Router()
+const router = express.Router();
 
-//require auth for all workout routes
-router.use(requireAuth)
+//require auth for all review routes
+router.use(requireAuth);
 
 //GET all reviews
-router.get('/', getReviews)
+router.get("/reviews", getReviews);
 
 //GET a single review
-router.get('/:id', getReview)
+router.get("/reviews/:id", getReview);
 
 //POST a new review
-router.post('/', createReview)
+router.post("/reviews", createReview);
 
 //DELETE a review
-router.delete('/:id', deleteReview)
+router.delete("/reviews/:id", deleteReview);
 
 //UPDATE a review
-router.patch('/:id', updateReview)
+router.patch("/reviews/:id", updateReview);
 
-module.exports = router
+module.exports = router;

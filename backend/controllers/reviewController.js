@@ -1,127 +1,138 @@
-const Review = require('../models/reviewModel')
-const mongoose = require('mongoose')
+const Review = require("../models/reviewModel");
+const mongoose = require("mongoose");
 
 //get all reviews of a certain user
-const getReviews = async(req, res) => {
-    const user_id = req.user._id
+const getReviews = async (req, res) => {
+  const user_id = req.user._id;
 
-    const reviews = await Review.find({ user_id }).sort({createdAt: -1})
+  const reviews = await Review.find({ user_id }).sort({ createdAt: -1 });
 
-    res.status(200).json(reviews)
-}
+  res.status(200).json(reviews);
+};
 
 //get a single review
-const getReview = async(req, res) => {
-    const { id } = req.params
+const getReview = async (req, res) => {
+  const { id } = req.params;
 
-    //not a valid object id (done to avoid a crash)
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  //not a valid object id (done to avoid a crash)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such review" });
+  }
 
-    const review = await Review.findById(id)
+  const review = await Review.findById(id);
 
-    if(!review) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  if (!review) {
+    return res.status(404).json({ error: "No such review" });
+  }
 
-    res.status(200).json(review)
-}
+  res.status(200).json(review);
+};
 
 //create new review
-const createReview = async(req, res) => {
-    const {title,
-        content,
-        size_rating,
-        crowdness_rating,
-        machine_modernity_rating,
-        machine_variety_rating,
-        cleanliness_rating,
-        vibe_rating,
-        overall_rating} = req.body
+const createReview = async (req, res) => {
+  const {
+    title,
+    content,
+    size_rating,
+    crowdness_rating,
+    machine_modernity_rating,
+    machine_variety_rating,
+    cleanliness_rating,
+    vibe_rating,
+    overall_rating,
+  } = req.body;
 
-    let emptyFields = []
+  let emptyFields = [];
 
-    if(!title) {
-        emptyFields.push('title')
-    }
-    if(!size_rating) {
-        emptyFields.push('size rating')
-    }
-    if(!crowdness_rating) {
-        emptyFields.push('crowdness rating')
-    }
-    if(!machine_modernity_rating) {
-        emptyFields.push('machine modernity rating')
-    }
-    if(!machine_variety_rating) {
-        emptyFields.push('machine variety rating')
-    }
-    if(!cleanliness_rating) {
-        emptyFields.push('cleanliness rating')
-    }
-    if(!vibe_rating) {
-        emptyFields.push('vibe rating')
-    }
-    if(emptyFields.length > 0) {
-        return res.status(400).json({error: 'Please fill in all the fields', emptyFields})
-    }
+  if (!title) {
+    emptyFields.push("title");
+  }
+  if (!size_rating) {
+    emptyFields.push("size rating");
+  }
+  if (!crowdness_rating) {
+    emptyFields.push("crowdness rating");
+  }
+  if (!machine_modernity_rating) {
+    emptyFields.push("machine modernity rating");
+  }
+  if (!machine_variety_rating) {
+    emptyFields.push("machine variety rating");
+  }
+  if (!cleanliness_rating) {
+    emptyFields.push("cleanliness rating");
+  }
+  if (!vibe_rating) {
+    emptyFields.push("vibe rating");
+  }
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all the fields", emptyFields });
+  }
 
-    //add doc to db
-    try {
-        const user_id = req.user._id
-        const review = await Review.create({user_id, gym_id,
-            title, content, 
-            size_rating, crowdness_rating, 
-            machine_modernity_rating, machine_variety_rating,
-            cleanliness_rating, vibe_rating, 
-            overall_rating})
-        res.status(200).json(review)
-    }catch(error) {
-        res.status(400).json({error: error.message})
-    }
-}
+  //add doc to db
+  try {
+    const user_id = req.user._id;
+    const review = await Review.create({
+      user_id,
+      gym_id,
+      title,
+      content,
+      size_rating,
+      crowdness_rating,
+      machine_modernity_rating,
+      machine_variety_rating,
+      cleanliness_rating,
+      vibe_rating,
+      overall_rating,
+    });
+    res.status(200).json(review);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 //delete a review
-const deleteReview = async(req, res) => {
-    const { id } = req.params
+const deleteReview = async (req, res) => {
+  const { id } = req.params;
 
-    //not a valid object id (done to avoid a crash)
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  //not a valid object id (done to avoid a crash)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such review" });
+  }
 
-    const review = await Review.findOneAndDelete({_id: id})
+  const review = await Review.findOneAndDelete({ _id: id });
 
-    if(!review) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  if (!review) {
+    return res.status(404).json({ error: "No such review" });
+  }
 
-    res.status(200).json(review)
-}
+  res.status(200).json(review);
+};
 
 //update a review
-const updateReview = async(req, res) => {
-    const { id } = req.params
+const updateReview = async (req, res) => {
+  const { id } = req.params;
 
-    //not a valid object id (done to avoid a crash)
-    if(!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(404).json({error: 'No such review'})
-    }
+  //not a valid object id (done to avoid a crash)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such review" });
+  }
 
-    const review = await Review.findOneAndUpdate({_id: id}, {...req.body})
+  const review = await Review.findOneAndUpdate({ _id: id }, { ...req.body });
 
-    if(!review) {
-        return res.status(400).json({error: 'No such review'})
-    }
+  if (!review) {
+    return res.status(400).json({ error: "No such review" });
+  }
 
-    res.status(200).json(review)
-}
+  res.status(200).json(review);
+};
 
 module.exports = {
-    getReviews,
-    getReview,
-    createReview,
-    deleteReview,
-    updateReview
-}
+  getReviews,
+  getReview,
+  createReview,
+  deleteReview,
+  updateReview,
+};
