@@ -14,18 +14,18 @@ const router = express.Router();
 //router.use(requireAuth);
 
 //GET all gyms
-router.get("/gyms", getGyms);
+router.get("/", getGyms);
 
 //GET a single gym
-router.get("/gyms/:id", getGym);
+router.get("/:id", getGym);
 
 //POST a new gym
-router.post("/gyms", createGym);
+router.post("/", createGym);
 
 //DELETE a gym
-router.delete("/gyms/:id", deleteGym);
+router.delete("/:id", deleteGym);
 
 //UPDATE a gym
-router.patch("/gyms/:id", updateGym);
+router.patch("/:id", updateGym);
 
 module.exports = router;

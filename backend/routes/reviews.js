@@ -14,18 +14,18 @@ const router = express.Router();
 router.use(requireAuth);
 
 //GET all reviews
-router.get("/reviews", getReviews);
+router.get("/", getReviews);
 
 //GET a single review
-router.get("/reviews/:id", getReview);
+router.get("/:id", getReview);
 
 //POST a new review
-router.post("/reviews", createReview);
+router.post("/", createReview);
 
 //DELETE a review
-router.delete("/reviews/:id", deleteReview);
+router.delete("/:id", deleteReview);
 
 //UPDATE a review
-router.patch("/reviews/:id", updateReview);
+router.patch("/:id", updateReview);
 
 module.exports = router;
