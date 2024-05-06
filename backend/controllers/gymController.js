@@ -1,14 +1,35 @@
 const Gym = require("../models/gymModel");
 const mongoose = require("mongoose");
 
-//get all gyms with a certain latitude and longitude
+//get all gyms
 const getGyms = async (req, res) => {
-  const latitude = req.latitude;
-  const longitude = req.longitude;
-
   const gyms = await Gym.find().sort({ createdAt: -1 });
 
   res.status(200).json(gyms);
+};
+
+//get all gyms with a certain latitude and longitude
+const getGymsOnMap = async (req, res) => {
+  const swLat = parseFloat(req.query.swLat);
+  const swLng = parseFloat(req.query.swLng);
+  const neLat = parseFloat(req.query.neLat);
+  const neLng = parseFloat(req.query.neLng);
+
+  const gyms = await Gym.find().sort({
+    createdAt: -1,
+    latitude: 1,
+    longitude: 1,
+  });
+
+  const gymsOnMap = gyms.filter(
+    (gym) =>
+      gym.latitude > swLat &&
+      gym.latitude < neLat &&
+      gym.longitude > swLng &&
+      gym.longitude < neLng
+  );
+
+  res.status(200).json(gymsOnMap);
 };
 
 //get a single gym
@@ -105,6 +126,7 @@ const updateGym = async (req, res) => {
 
 module.exports = {
   getGyms,
+  getGymsOnMap,
   getGym,
   createGym,
   deleteGym,

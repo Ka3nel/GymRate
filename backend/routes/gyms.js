@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   getGyms,
+  getGymsOnMap,
   getGym,
   createGym,
   deleteGym,
@@ -15,6 +16,9 @@ const router = express.Router();
 
 //GET all gyms
 router.get("/", getGyms);
+
+//GET all gyms that appear on the maps
+router.get("/onMap", getGymsOnMap);
 
 //GET a single gym
 router.get("/:id", getGym);

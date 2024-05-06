@@ -6,15 +6,23 @@ export const gymsReducer = (state, action) => {
   switch (action.type) {
     case "SET_GYMS":
       return {
+        ...state,
         gyms: action.payload,
       };
     case "CREATE_GYM":
       return {
+        ...state,
         gyms: [action.payload, ...state.gyms],
       };
     case "DELETE_GYM":
       return {
+        ...state,
         gyms: state.gyms.filter((g) => g._id !== action.payload._id),
+      };
+    case "SET_GYMS_ON_MAP":
+      return {
+        ...state,
+        gymsOnMap: action.payload,
       };
     default:
       return state;
@@ -24,6 +32,7 @@ export const gymsReducer = (state, action) => {
 export const GymsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(gymsReducer, {
     gyms: [],
+    gymsOnMap: [],
   });
 
   return (

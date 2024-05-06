@@ -12,6 +12,10 @@ const gymSchema = new Schema(
       type: String,
       required: false,
     },
+    address: {
+      type: String,
+      required: false,
+    },
     latitude: {
       type: Number,
       required: true,
@@ -20,7 +24,19 @@ const gymSchema = new Schema(
       type: Number,
       required: true,
     },
+    opening_time: {
+      type: String,
+      required: false,
+    },
+    closing_time: {
+      type: String,
+      required: false,
+    },
     total_rating: {
+      type: Number,
+      required: false,
+    },
+    review_count: {
       type: Number,
       required: false,
     },
