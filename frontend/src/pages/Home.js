@@ -3,9 +3,10 @@ import Map, { Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useGymsContext } from "../hooks/useGymsContext";
 
-// import search bar component
+// import search app components
 import Searchbar from "../components/Searchbar";
-import Drawer from "../components/Drawer";
+import FilterBox from "../components/FilterBox";
+import PersistentDrawerLeft from "../components/Drawer";
 
 // import mui components
 import { Button } from "@mui/material";
@@ -58,8 +59,11 @@ const Home = () => {
 
   return (
     <div className="home">
-      <Drawer open={openDrawer} setOpen={setOpenDrawer} />
-      <Searchbar />
+      <PersistentDrawerLeft open={openDrawer} setOpen={setOpenDrawer} />
+      <Searchbar
+        setOpenDrawer={setOpenDrawer}
+        setShowLocations={setShowLocations}
+      />
       <Button
         variant="outlined"
         style={{
@@ -72,6 +76,7 @@ const Home = () => {
       >
         Search in this area
       </Button>
+      <FilterBox />
       <Map
         mapboxAccessToken={process.env.REACT_APP_MAPBOX}
         {...viewState}

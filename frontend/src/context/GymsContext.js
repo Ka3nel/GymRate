@@ -9,6 +9,11 @@ export const gymsReducer = (state, action) => {
         ...state,
         gyms: action.payload,
       };
+    case "SET_GYMS_ON_MAP":
+      return {
+        ...state,
+        gymsOnMap: action.payload,
+      };
     case "CREATE_GYM":
       return {
         ...state,
@@ -18,11 +23,6 @@ export const gymsReducer = (state, action) => {
       return {
         ...state,
         gyms: state.gyms.filter((g) => g._id !== action.payload._id),
-      };
-    case "SET_GYMS_ON_MAP":
-      return {
-        ...state,
-        gymsOnMap: action.payload,
       };
     default:
       return state;

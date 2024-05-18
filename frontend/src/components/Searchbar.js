@@ -1,58 +1,71 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useGymsContext } from "../hooks/useGymsContext";
 
 // components
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
-import Autocomplete from "@mui/material/Autocomplete";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 
-const Searchbar = () => {
-  const { gyms, dispatch } = useGymsContext();
-  const [open, setOpen] = useState(false);
+const Searchbar = ({ setOpenDrawer, setShowLocations }) => {
+  const { dispatch } = useGymsContext();
+  const [searchedText, setSearchedText] = useState("");
+
+  const fetchGymsonMap = async () => {
+    const response = await fetch(
+      `/api/gyms/onMap?searchedText=${searchedText}`
+    );
+    const json = await response.json();
+
+    if (response.ok) {
+      dispatch({ type: "SET_GYMS_ON_MAP", payload: json });
+    }
+  };
 
   useEffect(() => {
-    const fetchGyms = async () => {
-      const response = await fetch("/api/gyms");
-      const json = await response.json();
+    const getData = setTimeout(() => {
+      fetchGymsonMap();
+    }, 1000);
 
-      if (response.ok) {
-        dispatch({ type: "SET_GYMS", payload: json });
-      }
-    };
-
-    fetchGyms();
-  }, [dispatch]);
+    return () => clearTimeout(getData);
+  }, [searchedText]);
 
   return (
-    <Stack sx={{ width: 300, margin: "auto" }}>
-      <Autocomplete
-        id="GymRate-demo"
-        style={{
-          position: "absolute",
-          left: "200px",
-          zIndex: "2000",
-          marginTop: "28px",
+    <Paper
+      component="form"
+      sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 300 }}
+      style={{
+        position: "absolute",
+        left: "200px",
+        zIndex: "2000",
+        marginTop: "31px",
+      }}
+    >
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search a location..."
+        inputProps={{ "aria-label": "search google maps" }}
+        onChange={(e) => setSearchedText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            setOpenDrawer(true);
+            setShowLocations(true);
+          }
         }}
-        sx={{ width: 300 }}
-        getOptionLabel={(gyms) => gyms.name}
-        open={open}
-        onInputChange={(events, value) => setOpen(value !== "")}
-        options={gyms}
-        isOptionEqualToValue={(option, value) => option.name === value.name}
-        noOptionsText="No locations"
-        renderOption={(props, gyms) => {
-          return (
-            <Box component="li" {...props} key={gyms._id}>
-              {gyms.name}
-            </Box>
-          );
-        }}
-        renderInput={(params) => (
-          <TextField {...params} label="Add a location" fullWidth />
-        )}
       />
-    </Stack>
+      <IconButton
+        type="button"
+        sx={{ p: "10px" }}
+        aria-label="search"
+        onClick={() => {
+          setOpenDrawer(true);
+          setShowLocations(true);
+        }}
+      >
+        <SearchIcon />
+      </IconButton>
+    </Paper>
   );
 };
 

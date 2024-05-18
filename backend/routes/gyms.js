@@ -17,7 +17,7 @@ const router = express.Router();
 //GET all gyms
 router.get("/", getGyms);
 
-//GET all gyms that appear on the maps
+//GET all gyms depending on the filters sent in the request
 router.get("/onMap", getGymsOnMap);
 
 //GET a single gym

@@ -24,7 +24,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-export default function PersistentDrawerLeft({ open, setOpen }) {
+function PersistentDrawerLeft({ open, setOpen }) {
   const theme = useTheme();
   const { gymsOnMap } = useGymsContext();
 
@@ -67,7 +67,7 @@ export default function PersistentDrawerLeft({ open, setOpen }) {
         </DrawerHeader>
         <List>
           {gymsOnMap.map((gym) => (
-            <ListItem disablePadding>
+            <ListItem key={gym._id} disablePadding>
               <ListItemButton>
                 <GymCard gym={gym} />
               </ListItemButton>
@@ -78,3 +78,5 @@ export default function PersistentDrawerLeft({ open, setOpen }) {
     </Box>
   );
 }
+
+export default PersistentDrawerLeft;

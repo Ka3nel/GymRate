@@ -20,10 +20,6 @@ const reviewSchema = new Schema(
       type: String,
       required: true,
     },
-    size_rating: {
-      type: Number,
-      required: true,
-    },
     crowdness_rating: {
       type: Number,
       required: true,

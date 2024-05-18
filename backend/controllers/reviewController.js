@@ -33,7 +33,6 @@ const createReview = async (req, res) => {
   const {
     title,
     content,
-    size_rating,
     crowdness_rating,
     machine_modernity_rating,
     machine_variety_rating,
@@ -46,9 +45,6 @@ const createReview = async (req, res) => {
 
   if (!title) {
     emptyFields.push("title");
-  }
-  if (!size_rating) {
-    emptyFields.push("size rating");
   }
   if (!crowdness_rating) {
     emptyFields.push("crowdness rating");
@@ -79,7 +75,6 @@ const createReview = async (req, res) => {
       gym_id,
       title,
       content,
-      size_rating,
       crowdness_rating,
       machine_modernity_rating,
       machine_variety_rating,

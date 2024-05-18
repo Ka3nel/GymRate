@@ -10,26 +10,44 @@ const getGyms = async (req, res) => {
 
 //get all gyms with a certain latitude and longitude
 const getGymsOnMap = async (req, res) => {
-  const swLat = parseFloat(req.query.swLat);
-  const swLng = parseFloat(req.query.swLng);
-  const neLat = parseFloat(req.query.neLat);
-  const neLng = parseFloat(req.query.neLng);
+  let gymsonMap = await Gym.find();
 
-  const gyms = await Gym.find().sort({
-    createdAt: -1,
-    latitude: 1,
-    longitude: 1,
-  });
+  if (req.query.swLat) {
+    const swLat = parseFloat(req.query.swLat);
+    const swLng = parseFloat(req.query.swLng);
+    const neLat = parseFloat(req.query.neLat);
+    const neLng = parseFloat(req.query.neLng);
 
-  const gymsOnMap = gyms.filter(
-    (gym) =>
-      gym.latitude > swLat &&
-      gym.latitude < neLat &&
-      gym.longitude > swLng &&
-      gym.longitude < neLng
-  );
+    gymsonMap = gymsonMap.filter(
+      (gym) =>
+        gym.latitude > swLat &&
+        gym.latitude < neLat &&
+        gym.longitude > swLng &&
+        gym.longitude < neLng
+    );
+  }
 
-  res.status(200).json(gymsOnMap);
+  if (req.query.searchedText && req.query.searchedText !== "") {
+    const searchedText = req.query.searchedText;
+
+    gymsonMap = gymsonMap.filter((gym) =>
+      gym.name.toLowerCase().includes(searchedText.toLowerCase())
+    );
+  }
+
+  if (req.query.nameFilter) {
+    gymsonMap.sort({ name: 1 });
+  }
+
+  if (req.query.ratingFilter) {
+    gymsonMap.sort({ total_rating: -1 });
+  }
+
+  if (req.query.sizeFilter) {
+    gymsonMap.sort({ size: -1 });
+  }
+
+  res.status(200).json(gymsonMap);
 };
 
 //get a single gym

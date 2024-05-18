@@ -16,6 +16,10 @@ const gymSchema = new Schema(
       type: String,
       required: false,
     },
+    size: {
+      type: Number,
+      required: false,
+    },
     latitude: {
       type: Number,
       required: true,

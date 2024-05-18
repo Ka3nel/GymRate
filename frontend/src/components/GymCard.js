@@ -26,7 +26,7 @@ function GymCard({ gym }) {
     current_time > gym_opening_time && current_time < gym_closing_time;
 
   return (
-    <Card sx={{ minWidth: 481, background: "#f5eedc" }}>
+    <Card sx={{ minWidth: 445, background: "#f5eedc" }}>
       <CardContent>
         <Typography variant="h5" component="div">
           {gym.name}
