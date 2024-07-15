@@ -7,7 +7,7 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 
-const Searchbar = ({ setOpenDrawer, setShowLocations }) => {
+const Searchbar = ({ setOpenDrawer, setShowLocations, setSearchbarText }) => {
   const { dispatch } = useGymsContext();
   const [searchedText, setSearchedText] = useState("");
 
@@ -36,7 +36,7 @@ const Searchbar = ({ setOpenDrawer, setShowLocations }) => {
       sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 300 }}
       style={{
         position: "absolute",
-        left: "200px",
+        left: "250px",
         zIndex: "2000",
         marginTop: "31px",
       }}
@@ -45,10 +45,15 @@ const Searchbar = ({ setOpenDrawer, setShowLocations }) => {
         sx={{ ml: 1, flex: 1 }}
         placeholder="Search a location..."
         inputProps={{ "aria-label": "search google maps" }}
-        onChange={(e) => setSearchedText(e.target.value)}
+        onChange={(e) => {
+          setSearchedText(e.target.value);
+          setSearchbarText(e.target.value);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
+
+            console.log("SearchedText: {" + searchedText + "}");
             setOpenDrawer(true);
             setShowLocations(true);
           }

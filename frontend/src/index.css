@@ -5,8 +5,8 @@
 :root {
   --primary: #97bfb4;
   --error: #dd4a48;
-  --background: #f5eedc;
-  --navbar_background: #f5eedcbc;
+  --background: #e0e5e9;
+  --navbar_background: #e0e5e9bc;
 }
 body {
   background: #f1f1f1;
@@ -127,7 +127,7 @@ nav button {
 /* auth forms */
 form.signup,
 form.login {
-  max-width: 400px;
+  min-width: 400px;
   margin: 40px auto;
   padding: 20px;
   background: #fff;

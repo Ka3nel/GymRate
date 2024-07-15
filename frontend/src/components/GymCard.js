@@ -4,6 +4,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Rating from "@mui/material/Rating";
 
 function GymCard({ gym }) {
   const current_time = new Date().getHours() * 60 + new Date().getMinutes();
@@ -26,17 +27,22 @@ function GymCard({ gym }) {
     current_time > gym_opening_time && current_time < gym_closing_time;
 
   return (
-    <Card sx={{ minWidth: 445, background: "#f5eedc" }}>
+    <Card sx={{ minWidth: 495, background: "#ffffff" }}>
       <CardContent>
         <Typography variant="h5" component="div">
           {gym.name}
         </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          {gym.total_rating ?? 0} STARS ({gym.review_count ?? 0})
-        </Typography>
-        <Typography variant="body2">
-          {gym.address ?? "Nothing street"}
-        </Typography>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Rating
+            defaultValue={gym.total_rating / 20 ?? 0}
+            precision={0.5}
+            readOnly
+          />
+          <Typography sx={{ mb: 1.5, fontSize: "18px" }} color="text.secondary">
+            ({gym.review_count ?? 0})
+          </Typography>
+        </div>
+        <Typography variant="body2">{gym.address ?? "No address"}</Typography>
         {gym_opening_time && (
           <div>
             <Typography

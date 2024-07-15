@@ -12,7 +12,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import { useGymsContext } from "../hooks/useGymsContext";
 import GymCard from "./GymCard";
 
-const drawerWidth = 513;
+const drawerWidth = 567;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -24,12 +24,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-function PersistentDrawerLeft({ open, setOpen }) {
+function PersistentDrawerLeft({ open, setOpen, selectedGym, setSelectedGym }) {
   const theme = useTheme();
   const { gymsOnMap } = useGymsContext();
 
   const handleDrawerClose = () => {
     setOpen(false);
+    setSelectedGym(undefined);
   };
 
   return (
@@ -42,7 +43,7 @@ function PersistentDrawerLeft({ open, setOpen }) {
             width: drawerWidth,
             boxSizing: "border-box",
             zIndex: 1,
-            background: "#f5eedcbc",
+            background: "#e0e5e9bc",
           },
         }}
         variant="persistent"
@@ -67,7 +68,11 @@ function PersistentDrawerLeft({ open, setOpen }) {
         </DrawerHeader>
         <List>
           {gymsOnMap.map((gym) => (
-            <ListItem key={gym._id} disablePadding>
+            <ListItem
+              key={gym._id}
+              disablePadding
+              onClick={() => setSelectedGym(gym)}
+            >
               <ListItemButton>
                 <GymCard gym={gym} />
               </ListItemButton>

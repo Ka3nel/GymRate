@@ -39,13 +39,13 @@ export default function MultipleSelectCheckmarks() {
         sx={{ m: 1, width: 125, height: 10 }}
         style={{
           position: "absolute",
-          left: "720px",
+          left: "770px",
           zIndex: "2000",
           marginTop: "36px",
         }}
       >
         <InputLabel id="multiple-checkbox-label" size="small">
-          Filter by
+          Sort by
         </InputLabel>
         <Select
           labelId="multiple-checkbox-label"
@@ -54,7 +54,7 @@ export default function MultipleSelectCheckmarks() {
           multiple
           value={filters}
           onChange={handleChange}
-          input={<OutlinedInput label="Filter by" />}
+          input={<OutlinedInput label="Sort by" />}
           renderValue={(selected) => selected.join(", ")}
           MenuProps={MenuProps}
         >

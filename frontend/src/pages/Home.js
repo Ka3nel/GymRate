@@ -6,11 +6,12 @@ import { useGymsContext } from "../hooks/useGymsContext";
 // import search app components
 import Searchbar from "../components/Searchbar";
 import FilterBox from "../components/FilterBox";
-import PersistentDrawerLeft from "../components/Drawer";
+import Drawer from "../components/Drawer";
+import GymInfoCard from "../components/GymInfoCard";
 
 // import mui components
 import { Button } from "@mui/material";
-import { Room } from "@mui/icons-material";
+import { RoomOutlined } from "@mui/icons-material";
 
 const Home = () => {
   const mapRef = useRef(null);
@@ -20,12 +21,14 @@ const Home = () => {
     zoom: 10,
   });
   const { gymsOnMap, dispatch } = useGymsContext();
+  const [searchbarText, setSearchbarText] = useState("");
   const [showLocations, setShowLocations] = useState(false);
-  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [selectedGym, setSelectedGym] = useState(undefined);
 
   const fetchGymsOnMap = async (swLat, swLng, neLat, neLng) => {
     const response = await fetch(
-      `/api/gyms/onMap?swLat=${swLat}&swLng=${swLng}&neLat=${neLat}&neLng=${neLng}`
+      `/api/gyms/onMap?swLat=${swLat}&swLng=${swLng}&neLat=${neLat}&neLng=${neLng}&searchedText=${searchbarText}`
     );
     const json = await response.json();
 
@@ -59,18 +62,27 @@ const Home = () => {
 
   return (
     <div className="home">
-      <PersistentDrawerLeft open={openDrawer} setOpen={setOpenDrawer} />
+      <Drawer
+        open={openDrawer}
+        setOpen={setOpenDrawer}
+        selectedGym={selectedGym}
+        setSelectedGym={setSelectedGym}
+      />
+      <GymInfoCard selectedGym={selectedGym} setSelectedGym={setSelectedGym} />
       <Searchbar
         setOpenDrawer={setOpenDrawer}
         setShowLocations={setShowLocations}
+        setSearchbarText={setSearchbarText}
       />
       <Button
         variant="outlined"
         style={{
           position: "absolute",
-          left: "525px",
+          left: "575px",
           zIndex: "2000",
           marginTop: "38px",
+          color: "#0a62d0",
+          borderColor: "#0a62d0",
         }}
         onClick={handleShowLocations}
       >
@@ -95,7 +107,7 @@ const Home = () => {
               latitude={gym.latitude}
               longitude={gym.longitude}
             >
-              <Room
+              <RoomOutlined
                 style={{
                   fontSize:
                     viewState.zoom < 10.5

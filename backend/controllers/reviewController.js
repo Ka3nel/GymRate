@@ -2,10 +2,19 @@ const Review = require("../models/reviewModel");
 const mongoose = require("mongoose");
 
 //get all reviews of a certain user
-const getReviews = async (req, res) => {
+const getUserReviews = async (req, res) => {
   const user_id = req.user._id;
 
   const reviews = await Review.find({ user_id }).sort({ createdAt: -1 });
+
+  res.status(200).json(reviews);
+};
+
+//get all reviews of a certain gym
+const getGymReviews = async (req, res) => {
+  const gym_id = req.params.gym_id;
+
+  const reviews = await Review.find({ gym_id }).sort({ createdAt: -1 });
 
   res.status(200).json(reviews);
 };
@@ -31,6 +40,7 @@ const getReview = async (req, res) => {
 //create new review
 const createReview = async (req, res) => {
   const {
+    gym_id,
     title,
     content,
     crowdness_rating,
@@ -125,7 +135,8 @@ const updateReview = async (req, res) => {
 };
 
 module.exports = {
-  getReviews,
+  getUserReviews,
+  getGymReviews,
   getReview,
   createReview,
   deleteReview,

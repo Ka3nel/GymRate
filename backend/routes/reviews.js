@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  getReviews,
+  getUserReviews,
   getReview,
   createReview,
   deleteReview,
@@ -13,8 +13,8 @@ const router = express.Router();
 //require auth for all review routes
 router.use(requireAuth);
 
-//GET all reviews
-router.get("/", getReviews);
+//GET all reviews of a certain user
+router.get("/", getUserReviews);
 
 //GET a single review
 router.get("/:id", getReview);
