@@ -53,7 +53,6 @@ const Searchbar = ({ setOpenDrawer, setShowLocations, setSearchbarText }) => {
           if (e.key === "Enter") {
             e.preventDefault();
 
-            console.log("SearchedText: {" + searchedText + "}");
             setOpenDrawer(true);
             setShowLocations(true);
           }

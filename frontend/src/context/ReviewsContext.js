@@ -23,7 +23,7 @@ export const reviewsReducer = (state, action) => {
 
 export const ReviewsContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reviewsReducer, {
-    reviews: null,
+    reviews: [],
   });
 
   return (

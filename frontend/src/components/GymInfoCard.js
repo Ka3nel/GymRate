@@ -1,22 +1,36 @@
 import * as React from "react";
+import { useReviewsContext } from "../hooks/useReviewsContext";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { styled, useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import Box from "@mui/material/Box";
 import ReviewCard from "./ReviewCard";
-import { Button } from "@mui/material";
+import ReviewForm from "./ReviewForm";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import Divider from "@mui/material/Divider";
+import Modal from "@mui/material/Modal";
 
-function GymInfoCard({ selectedGym, setSelectedGym }) {
-  const theme = useTheme();
-  const [reviews, setReviews] = React.useState([]);
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+function GymInfoCard({ selectedGym, setSelectedGym, fetchGymsOnMap }) {
+  const { dispatch, reviews } = useReviewsContext();
+  const [detailsItem, setDetailsItem] = React.useState();
+  const [openReviewForm, setOpenReviewForm] = React.useState(false);
 
   React.useEffect(() => {
     const getGyms = async () => {
@@ -29,12 +43,12 @@ function GymInfoCard({ selectedGym, setSelectedGym }) {
       const json = await response.json();
 
       if (response.ok) {
-        setReviews(json);
+        dispatch({ type: "SET_REVIEWS", payload: json });
       }
     };
 
     getGyms();
-  }, [selectedGym]);
+  }, [selectedGym, dispatch]);
 
   const handleDrawerClose = () => {
     setSelectedGym(undefined);
@@ -68,123 +82,157 @@ function GymInfoCard({ selectedGym, setSelectedGym }) {
     current_time > gym_opening_time && current_time < gym_closing_time;
 
   return (
-    selectedGym && (
-      <Card
-        sx={{
-          padding: "45px 20px",
-          position: "absolute",
-          zIndex: "2000",
-          top: "125px",
-          left: "580px",
-          height: "70vh",
-          width: "610px",
-          backgroundColor: "#e0e5e9bc",
-        }}
-      >
-        <CardContent
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "10px",
-            marginBottom: "15px",
+    <div>
+      {selectedGym && (
+        <Card
+          sx={{
+            padding: "20px",
+            position: "absolute",
+            zIndex: "2000",
+            top: "125px",
+            left: "580px",
+            height: "76vh",
+            width: "610px",
+            backgroundColor: "#e0e5e9bc",
           }}
         >
-          <IconButton
+          <CardContent
             style={{
-              position: "absolute",
-              top: "5px",
-              right: "5px",
-              zIndex: "2000",
+              backgroundColor: "#ffffff",
+              borderRadius: "4px",
+              marginBottom: "15px",
             }}
-            onClick={handleDrawerClose}
           >
-            <ClearIcon />
-          </IconButton>
-          <Typography
-            style={{ textAlign: "center" }}
-            gutterBottom
-            variant="h4"
-            component="div"
-          >
-            {selectedGym.name}
-          </Typography>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <Rating
-              defaultValue={selectedGym.total_rating / 20 ?? 0}
-              precision={0.5}
-              readOnly
-            />
-            <Typography
-              sx={{ mb: 1.5, fontSize: "18px" }}
-              color="text.secondary"
-            >
-              ({selectedGym.review_count ?? 0})
-            </Typography>
-          </div>
-          <Typography variant="body2">
-            {selectedGym.address ?? "No address"}
-          </Typography>
-          {gym_opening_time && (
-            <div>
-              <Typography
-                display="inline"
-                variant="body2"
-                color={isOpen ? "green" : "red"}
-              >
-                {isOpen ? "Open" : "Closed"}
-              </Typography>
-              <Typography display="inline" variant="body2">
-                {isOpen
-                  ? ` (Closes at ${selectedGym.closing_time})`
-                  : ` (Opens at ${selectedGym.opening_time})`}
-              </Typography>
-            </div>
-          )}
-          <Typography variant="body2" color="text.secondary">
-            {selectedGym.description}
-          </Typography>
-        </CardContent>
-        <CardContent
-          style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "10px",
-            overflow: "auto",
-            maxHeight: "",
-          }}
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-          >
-            <Typography variant="body" color="text.primary">
-              Reviews
-            </Typography>
             <IconButton
               style={{
-                color: "green",
+                position: "absolute",
+                top: "25px",
+                right: "25px",
+                zIndex: "2000",
               }}
               onClick={handleDrawerClose}
             >
-              <AddBoxIcon />
+              <ClearIcon />
             </IconButton>
-          </Box>
-          <List>
-            {reviews.map((review) => (
-              <ListItem
-                key={review._id}
-                disablePadding
-                // onClick={() => setSelectedGym(gym)}
+            <Typography
+              style={{ textAlign: "center" }}
+              gutterBottom
+              variant="h4"
+              component="div"
+            >
+              {selectedGym.name}
+              <Divider />
+            </Typography>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Rating
+                value={selectedGym.total_rating / 20 ?? 0}
+                precision={0.5}
+                readOnly
+              />
+              <Typography
+                sx={{ mb: 1.5, fontSize: "18px" }}
+                color="text.secondary"
               >
-                <ListItemButton>
-                  <ReviewCard review={review} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </CardContent>
-      </Card>
-    )
+                ({selectedGym.review_count ?? 0})
+              </Typography>
+            </div>
+            <Typography variant="body2">
+              {selectedGym.address ?? "No address"}
+            </Typography>
+            {gym_opening_time && (
+              <div>
+                <Typography
+                  display="inline"
+                  variant="body2"
+                  color={isOpen ? "green" : "red"}
+                >
+                  {isOpen ? "Open" : "Closed"}
+                </Typography>
+                <Typography display="inline" variant="body2">
+                  {isOpen
+                    ? ` (Closes at ${selectedGym.closing_time})`
+                    : ` (Opens at ${selectedGym.opening_time})`}
+                </Typography>
+              </div>
+            )}
+            <Typography variant="body2" color="text.secondary">
+              {selectedGym.description}
+            </Typography>
+          </CardContent>
+          <CardContent
+            className="scrollable-container"
+            style={{
+              backgroundColor: "#ffffff",
+              borderRadius: "4px",
+              overflow: "auto",
+              height: "70%",
+              overflowY: "auto",
+              paddingBottom: "0px",
+            }}
+          >
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              width="100%"
+            >
+              <Typography variant="body" color="text.primary">
+                Reviews
+              </Typography>
+              <IconButton
+                style={{
+                  color: "green",
+                }}
+                onClick={() => setOpenReviewForm(true)}
+              >
+                <AddBoxIcon />
+              </IconButton>
+            </Box>
+            <Divider />
+            {reviews && reviews.length ? (
+              <List>
+                {reviews.map((review) => (
+                  <ListItem
+                    key={review._id}
+                    disablePadding
+                    // onClick={() => setSelectedGym(gym)}
+                  >
+                    <ReviewCard
+                      review={review}
+                      detailsItem={detailsItem}
+                      setDetailsItem={setDetailsItem}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                style={{ marginTop: "15px" }}
+              >
+                No reviews
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+      )}
+      <Modal
+        style={{ zIndex: "4000" }}
+        open={openReviewForm}
+        onClose={() => setOpenReviewForm(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <ReviewForm
+            gym={selectedGym}
+            setOpenReviewForm={setOpenReviewForm}
+            fetchGymsOnMap={fetchGymsOnMap}
+          />
+        </Box>
+      </Modal>
+    </div>
   );
 }
 

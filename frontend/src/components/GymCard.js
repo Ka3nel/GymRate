@@ -33,11 +33,7 @@ function GymCard({ gym }) {
           {gym.name}
         </Typography>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <Rating
-            defaultValue={gym.total_rating / 20 ?? 0}
-            precision={0.5}
-            readOnly
-          />
+          <Rating value={gym.total_rating / 20} precision={0.5} readOnly />
           <Typography sx={{ mb: 1.5, fontSize: "18px" }} color="text.secondary">
             ({gym.review_count ?? 0})
           </Typography>

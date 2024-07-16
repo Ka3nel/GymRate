@@ -20,9 +20,7 @@ const MenuProps = {
 
 const options = ["Name", "Rating", "Size"];
 
-export default function MultipleSelectCheckmarks() {
-  const [filters, setFilters] = React.useState([]);
-
+export default function MultipleSelectCheckmarks({ filters, setFilters }) {
   const handleChange = (event) => {
     const {
       target: { value },

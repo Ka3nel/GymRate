@@ -36,15 +36,19 @@ const getGymsOnMap = async (req, res) => {
   }
 
   if (req.query.nameFilter) {
-    gymsonMap.sort({ name: 1 });
+    gymsonMap.sort((a, b) => {
+      if (a.name === b.name) return 0;
+      if (a.name > b.name) return 1;
+      return -1;
+    });
   }
 
   if (req.query.ratingFilter) {
-    gymsonMap.sort({ total_rating: -1 });
+    gymsonMap.sort((a, b) => b.total_rating - a.total_rating);
   }
 
   if (req.query.sizeFilter) {
-    gymsonMap.sort({ size: -1 });
+    gymsonMap.sort((a, b) => b.size ?? 0 - a.size ?? 0);
   }
 
   res.status(200).json(gymsonMap);
@@ -70,7 +74,18 @@ const getGym = async (req, res) => {
 
 //create new gym
 const createGym = async (req, res) => {
-  const { name, details, latitude, longitude, total_rating } = req.body;
+  const {
+    name,
+    details,
+    address,
+    size,
+    latitude,
+    longitude,
+    opening_time,
+    closing_time,
+    total_rating,
+    review_count,
+  } = req.body;
 
   let emptyFields = [];
 
@@ -80,11 +95,23 @@ const createGym = async (req, res) => {
   if (!details) {
     emptyFields.push("details");
   }
+  if (!address) {
+    emptyFields.push("address");
+  }
+  if (!size) {
+    emptyFields.push("size");
+  }
   if (!latitude) {
     emptyFields.push("latitude");
   }
   if (!longitude) {
     emptyFields.push("longitude");
+  }
+  if (!opening_time) {
+    emptyFields.push("opening_time");
+  }
+  if (!closing_time) {
+    emptyFields.push("closing_time");
   }
   if (emptyFields.length > 0) {
     return res
@@ -97,8 +124,14 @@ const createGym = async (req, res) => {
     const gym = await Gym.create({
       name,
       details,
+      address,
+      size,
       latitude,
       longitude,
+      opening_time,
+      closing_time,
+      total_rating,
+      review_count,
     });
     res.status(200).json(gym);
   } catch (error) {
@@ -106,7 +139,7 @@ const createGym = async (req, res) => {
   }
 };
 
-//delete a hym
+//delete a gym
 const deleteGym = async (req, res) => {
   const { id } = req.params;
 
@@ -128,7 +161,6 @@ const deleteGym = async (req, res) => {
 const updateGym = async (req, res) => {
   const { id } = req.params;
 
-  //not a valid object id (done to avoid a crash)
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such gym" });
   }

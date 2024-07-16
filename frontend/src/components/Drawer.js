@@ -24,28 +24,36 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-function PersistentDrawerLeft({ open, setOpen, selectedGym, setSelectedGym }) {
+function PersistentDrawerLeft({
+  open,
+  setOpen,
+  selectedGym,
+  setSelectedGym,
+  setShowLocations,
+}) {
   const theme = useTheme();
   const { gymsOnMap } = useGymsContext();
 
   const handleDrawerClose = () => {
     setOpen(false);
+    setShowLocations(false);
     setSelectedGym(undefined);
   };
 
+  React.useEffect(() => {}, [gymsOnMap]);
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box className="scrollable-container" sx={{ display: "flex" }}>
       <Drawer
         sx={{
           width: drawerWidth,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: "border-box",
             zIndex: 1,
             background: "#e0e5e9bc",
           },
         }}
+        style={{ position: "absolute", left: "0px", top: "200px" }}
         variant="persistent"
         anchor="left"
         open={open}

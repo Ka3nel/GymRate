@@ -38,11 +38,11 @@ const gymSchema = new Schema(
     },
     total_rating: {
       type: Number,
-      required: false,
+      required: true,
     },
     review_count: {
       type: Number,
-      required: false,
+      required: true,
     },
   },
   { timestamps: true }

@@ -1,4 +1,5 @@
 const Review = require("../models/reviewModel");
+const Gym = require("../models/gymModel");
 const mongoose = require("mongoose");
 
 //get all reviews of a certain user
@@ -92,6 +93,16 @@ const createReview = async (req, res) => {
       vibe_rating,
       overall_rating,
     });
+    const gym = await Gym.findById(gym_id);
+    const new_review_count = gym.review_count + 1;
+    const new_total_rating =
+      (gym.total_rating * gym.review_count + overall_rating) / new_review_count;
+
+    const result = await Gym.findOneAndUpdate(
+      { _id: gym._id },
+      { total_rating: new_total_rating, review_count: new_review_count },
+      { new: true }
+    );
     res.status(200).json(review);
   } catch (error) {
     res.status(400).json({ error: error.message });
