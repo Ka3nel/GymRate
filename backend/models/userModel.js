@@ -5,10 +5,6 @@ const validator = require("validator");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  is_admin: {
-    type: Boolean,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
